@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Verbind met GridSense Gateway",
+        "description": "Vul het IP-adres van je GridSense Gateway in.",
+        "data": {
+          "host": "IP-adres van de gateway"
+        }
+      },
+      "confirm": {
+        "title": "GridSense Gateway gevonden",
+        "description": "GridSense Gateway op {host} toevoegen?"
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken, controleer het IP-adres en probeer opnieuw.",
+      "unknown": "Onverwachte fout"
+    },
+    "abort": {
+      "already_configured": "Deze GridSense Gateway is al geconfigureerd."
+    }
+  }
+}

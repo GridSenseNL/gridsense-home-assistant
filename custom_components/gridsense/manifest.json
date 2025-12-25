@@ -1,0 +1,13 @@
+{
+  "domain": "gridsense",
+  "name": "GridSense",
+  "version": "0.1.0",
+  "documentation": "https://git.zsinfo.nl/gridsense/gridsense-home-assistant",
+  "requirements": [],
+  "codeowners": ["@Zandor300"],
+  "config_flow": true,
+  "integration_type": "hub",
+  "zeroconf": [{ "type": "_gridsense-homeassistant._tcp.local." }],
+  "iot_class": "local_polling",
+  "loggers": ["custom_components.gridsense"]
+}

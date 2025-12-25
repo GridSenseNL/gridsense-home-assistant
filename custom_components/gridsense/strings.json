@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to GridSense Gateway",
+        "description": "Enter the IP address of your GridSense Gateway.",
+        "data": {
+          "host": "Gateway IP address"
+        }
+      },
+      "confirm": {
+        "title": "Discovered GridSense Gateway",
+        "description": "Add GridSense Gateway at {host}?"
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect, check the IP address and try again.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This GridSense Gateway is already configured."
+    }
+  }
+}
