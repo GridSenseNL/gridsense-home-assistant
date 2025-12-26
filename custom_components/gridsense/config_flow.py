@@ -27,6 +27,7 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _discovered_host: str | None = None
     _discovered_name: str | None = None
     _discovered_gateway_id: str | None = None
+    _discovered_unique_id: str | None = None
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Handle the initial step."""
@@ -34,9 +35,13 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             host = user_input[CONF_HOST].strip()
+            for entry in self._async_current_entries():
+                if entry.data.get(CONF_HOST) == host:
+                    return self.async_abort(reason="already_configured")
             result = await self._async_validate_host(host)
             if result is None:
-                await self.async_set_unique_id(host)
+                unique_id = self._discovered_unique_id or host
+                await self.async_set_unique_id(unique_id)
                 self._abort_if_unique_id_configured()
                 gateway_identifier = self._gateway_identifier(host)
                 title = f"GridSense Gateway {gateway_identifier}"
@@ -57,10 +62,15 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             discovery_info.name
         )
         self._discovered_gateway_id = _extract_gateway_id(mdns_name)
+        self._discovered_unique_id = self._discovered_gateway_id or host
         self._discovered_host = host
         self._discovered_name = mdns_name
 
-        await self.async_set_unique_id(mdns_name or host)
+        for entry in self._async_current_entries():
+            if entry.data.get(CONF_HOST) == host:
+                return self.async_abort(reason="already_configured")
+
+        await self.async_set_unique_id(self._discovered_unique_id)
         self._abort_if_unique_id_configured()
 
         gateway_identifier = self._gateway_identifier(host)
