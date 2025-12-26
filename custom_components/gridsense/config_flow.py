@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 import logging
+import re
 
 import voluptuous as vol
 
@@ -25,6 +26,7 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     _discovered_host: str | None = None
     _discovered_name: str | None = None
+    _discovered_gateway_id: str | None = None
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Handle the initial step."""
@@ -36,7 +38,9 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if result is None:
                 await self.async_set_unique_id(host)
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(title=host, data={CONF_HOST: host})
+                gateway_identifier = self._gateway_identifier(host)
+                title = f"GridSense Gateway {gateway_identifier}"
+                return self.async_create_entry(title=title, data={CONF_HOST: host})
             errors["base"] = result
 
         data_schema = vol.Schema(
@@ -52,13 +56,15 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         mdns_name = _normalize_mdns_name(discovery_info.hostname) or _normalize_mdns_name(
             discovery_info.name
         )
+        self._discovered_gateway_id = _extract_gateway_id(mdns_name)
         self._discovered_host = host
         self._discovered_name = mdns_name
 
         await self.async_set_unique_id(mdns_name or host)
         self._abort_if_unique_id_configured()
 
-        self.context["title_placeholders"] = {"host": host}
+        gateway_identifier = self._gateway_identifier(host)
+        self.context["title_placeholders"] = {"host": host, "name": gateway_identifier}
         return await self.async_step_confirm()
 
     async def async_step_confirm(self, user_input: dict[str, Any] | None = None) -> FlowResult:
@@ -86,9 +92,33 @@ class GridSenseConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return "cannot_connect"
         return None
 
+    def _gateway_identifier(self, host: str) -> str:
+        """Return a short identifier for the gateway."""
+        if self._discovered_gateway_id:
+            return self._discovered_gateway_id
+        if self._discovered_name:
+            extracted = _extract_gateway_id(self._discovered_name)
+            if extracted:
+                self._discovered_gateway_id = extracted
+                return extracted
+        return host
+
 
 def _normalize_mdns_name(name: str | None) -> str | None:
     """Normalize mDNS name (remove trailing dot)."""
     if not name:
         return None
     return name.rstrip(".")
+
+
+def _extract_gateway_id(mdns_name: str | None) -> str | None:
+    """Extract the short gateway identifier from an mDNS hostname."""
+    if not mdns_name:
+        return None
+    normalized = _normalize_mdns_name(mdns_name)
+    if normalized is None:
+        return None
+    match = re.match(r"^gridsense-([a-zA-Z0-9]+)-homeassistant", normalized.lower())
+    if match:
+        return match.group(1)
+    return None

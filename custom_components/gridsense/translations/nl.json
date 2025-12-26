@@ -1,5 +1,6 @@
 {
   "config": {
+    "flow_title": "GridSense Gateway {name}",
     "step": {
       "user": {
         "title": "Verbind met GridSense Gateway",
