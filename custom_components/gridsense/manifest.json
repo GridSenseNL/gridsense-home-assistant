@@ -3,6 +3,7 @@
   "name": "GridSense",
   "version": "0.1.0",
   "documentation": "https://git.zsinfo.nl/gridsense/gridsense-home-assistant",
+  "issue_tracker": "https://github.com/GridSenseNL/gridsense-home-assistant",
   "requirements": [],
   "codeowners": ["@Zandor300"],
   "config_flow": true,
