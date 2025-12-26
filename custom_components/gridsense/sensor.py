@@ -88,6 +88,14 @@ INVERTER_SENSORS: tuple[GridSenseSensorEntityDescription, ...] = (
         value_fn=lambda data: _try_float(data.get("powerDc")),
     ),
     GridSenseSensorEntityDescription(
+        key="power_dc_pv_total",
+        name="PV Total Power",
+        device_class=SensorDeviceClass.POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda data: _try_float(data.get("powerDcPvTotal")),
+    ),
+    GridSenseSensorEntityDescription(
         key="energy_injected_total",
         name="Energy Injected",
         device_class=SensorDeviceClass.ENERGY,
