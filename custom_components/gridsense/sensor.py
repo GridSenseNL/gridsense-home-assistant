@@ -127,7 +127,6 @@ BATTERY_SENSORS: tuple[GridSenseSensorEntityDescription, ...] = (
         name="Available Energy",
         device_class=SensorDeviceClass.ENERGY,
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-        state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda data: _to_kwh(data.get("availableEnergy")),
     ),
 )
@@ -192,7 +191,7 @@ async def async_setup_entry(
                 GridSenseSensor(
                     coordinator=coordinator,
                     device_name=inverter_model,
-                    unique_id=f"{inverter_manufacturer}_{inverter_serial}_{description.key}",
+                    unique_id=f"inverter_{inverter_manufacturer}_{inverter_serial}_{description.key}",
                     description=description,
                     device_info=inverter_device,
                     data_getter=lambda payload, inv_man=inverter_manufacturer, inv_serial=inverter_serial: _find_inverter(
@@ -225,7 +224,7 @@ async def async_setup_entry(
                     GridSenseSensor(
                         coordinator=coordinator,
                         device_name=battery_model,
-                        unique_id=f"{battery_manufacturer}_{battery_serial}_{description.key}",
+                        unique_id=f"battery_{battery_manufacturer}_{battery_serial}_{description.key}",
                         description=description,
                         device_info=battery_device,
                         data_getter=lambda payload, inv_man=inverter_manufacturer, inv_serial=inverter_serial, bat_man=battery_manufacturer, bat_serial=battery_serial: _find_battery(
@@ -249,7 +248,7 @@ async def async_setup_entry(
             )
 
             meter_device = DeviceInfo(
-                identifiers={(DOMAIN, f"meter_{meter_manufacturer}_{meter_serial}")},
+                identifiers={(DOMAIN, f"energymeter_{meter_manufacturer}_{meter_serial}")},
                 manufacturer=meter_manufacturer or "GridSense",
                 model=meter_model,
                 name=meter_name,
@@ -262,7 +261,7 @@ async def async_setup_entry(
                     GridSenseSensor(
                         coordinator=coordinator,
                         device_name=meter_model,
-                        unique_id=f"{meter_manufacturer}_{meter_serial}_{description.key}",
+                        unique_id=f"energymeter_{meter_manufacturer}_{meter_serial}_{description.key}",
                         description=description,
                         device_info=meter_device,
                         data_getter=lambda payload, inv_man=inverter_manufacturer, inv_serial=inverter_serial, met_man=meter_manufacturer, met_serial=meter_serial: _find_meter(
