@@ -1,13 +1,6 @@
 {
   "name": "GridSense",
-  "description": "GridSense local energy sensors integration for Home Assistant",
-  "hacs": {
-    "type": "integration"
-  },
-  "filename": "custom_components/gridsense/manifest.json",
-  "homeassistant": "2025.3.0",
-  "zip_release": false,
-  "domains": [
-    "gridsense"
-  ]
+  "content_in_root": false,
+  "country": "NL",
+  "homeassistant": "2025.3.0"
 }
