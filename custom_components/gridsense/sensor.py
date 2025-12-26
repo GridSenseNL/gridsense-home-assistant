@@ -129,6 +129,22 @@ BATTERY_SENSORS: tuple[GridSenseSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         value_fn=lambda data: _to_kwh(data.get("availableEnergy")),
     ),
+    GridSenseSensorEntityDescription(
+        key="total_energy_charged",
+        name="Total Energy Charged",
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_fn=lambda data: _to_kwh(data.get("totalEnergyCharged")),
+    ),
+    GridSenseSensorEntityDescription(
+        key="total_energy_discharged",
+        name="Total Energy Discharged",
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        value_fn=lambda data: _to_kwh(data.get("totalEnergyDischarged")),
+    ),
 )
 
 
