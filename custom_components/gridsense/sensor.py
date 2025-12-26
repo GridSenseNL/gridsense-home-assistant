@@ -298,12 +298,10 @@ def _to_kwh(value: Any) -> float | None:
 
 
 def _to_percentage(value: Any) -> float | None:
-    """Convert fraction to percentage."""
+    """Return percentage value as provided by the API."""
     numeric = _try_float(value)
     if numeric is None:
         return None
-    if numeric <= 1:
-        return numeric * 100
     return numeric
 
 
