@@ -177,12 +177,13 @@ async def async_setup_entry(
         if not inverter_serial:
             continue
         inverter_model = inverter.get("model") or "Inverter"
+        inverter_name = _device_name(inverter_manufacturer or "GridSense", inverter_model)
 
         inverter_device = DeviceInfo(
             identifiers={(DOMAIN, f"inverter_{inverter_manufacturer}_{inverter_serial}")},
             manufacturer=inverter_manufacturer or "GridSense",
             model=inverter_model,
-            name=inverter_model,
+            name=inverter_name,
             sw_version=inverter.get("version"),
         )
 
@@ -208,12 +209,13 @@ async def async_setup_entry(
                 battery.get("serialNumber"), f"{inverter_serial}_b{index}"
             )
             battery_model = battery.get("model") or "Battery"
+            battery_name = _device_name(battery_manufacturer or "GridSense", battery_model)
 
             battery_device = DeviceInfo(
                 identifiers={(DOMAIN, f"battery_{battery_manufacturer}_{battery_serial}")},
                 manufacturer=battery_manufacturer or "GridSense",
                 model=battery_model,
-                name=battery_model,
+                name=battery_name,
                 sw_version=battery.get("version"),
                 via_device=(DOMAIN, f"inverter_{inverter_manufacturer}_{inverter_serial}"),
             )
@@ -242,12 +244,15 @@ async def async_setup_entry(
             )
             meter_index += 1
             meter_model = meter.get("model") or "Energy Meter"
+            meter_name = _meter_name(
+                meter_manufacturer or "GridSense", meter_model, meter.get("options")
+            )
 
             meter_device = DeviceInfo(
                 identifiers={(DOMAIN, f"meter_{meter_manufacturer}_{meter_serial}")},
                 manufacturer=meter_manufacturer or "GridSense",
                 model=meter_model,
-                name=meter_model,
+                name=meter_name,
                 sw_version=meter.get("version"),
                 via_device=(DOMAIN, f"inverter_{inverter_manufacturer}_{inverter_serial}"),
             )
@@ -275,6 +280,28 @@ def _identifier(candidate: str | None, fallback: str = "") -> str:
         return fallback
     cleaned = candidate.replace("\x00", "").strip()
     return cleaned or fallback
+
+
+def _device_name(manufacturer: str | None, model: str | None) -> str:
+    """Build device name as '<Manufacturer> <Model>'."""
+    manu = (manufacturer or "").strip()
+    model_name = (model or "").strip()
+    if not manu and not model_name:
+        return "GridSense"
+    if not manu:
+        return model_name
+    if not model_name:
+        return manu
+    return f"{manu} {model_name}"
+
+
+def _meter_name(manufacturer: str | None, model: str | None, options: Any) -> str:
+    """Build meter name including options when present."""
+    base = _device_name(manufacturer, model)
+    option_str = _identifier(options if isinstance(options, str) else None, "")
+    if option_str:
+        return f"{base} ({option_str})"
+    return base
 
 
 def _try_float(value: Any) -> float | int | None:
