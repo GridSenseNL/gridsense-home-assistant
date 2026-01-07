@@ -19,7 +19,8 @@
       "unknown": "Onverwachte fout"
     },
     "abort": {
-      "already_configured": "Deze GridSense Gateway is al geconfigureerd."
+      "already_configured": "Deze GridSense Gateway is al geconfigureerd.",
+      "no_uuid": "Geen UUID gevonden in de mDNS-advertentie voor deze GridSense Gateway."
     }
   }
 }
