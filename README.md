@@ -13,6 +13,8 @@ A Home Assistant custom integration to integrate GridSense local energy sensors.
 - If hosted on GitHub, a release (tag) is required for HACS to pick up versions
 
 ## Installation via HACS (recommended)
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=GridSenseNL&repository=gridsense-home-assistant&category=integration" target="_blank"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." /></a>
+
 1. Open Home Assistant UI → Settings → Integrations → Add Integration (or go to HACS if already installed).
 2. If you already added this repository to your HACS custom repositories, search for "GridSense" in HACS → Integrations and install.
 3. If not yet added to HACS automatically: HACS → Integrations → ⋯ (top-right) → Custom repositories → paste the repository URL, set category to "Integration", and click "Add".
@@ -26,6 +28,8 @@ A Home Assistant custom integration to integrate GridSense local energy sensors.
 4. Use Settings → Devices & Services → Add Integration and search for "GridSense" and follow the UI setup.
 
 ## Configuration
+<a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=gridsense" target="_blank"><img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Open your Home Assistant instance and start setting up a new integration." /></a>
+
 This integration uses the UI config flow. After installation:
 - Go to Settings → Devices & Services → Add Integration → search for "GridSense".
 - Follow the on-screen prompts to add your GridSense device.
